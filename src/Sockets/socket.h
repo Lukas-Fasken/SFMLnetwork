@@ -23,6 +23,9 @@ class Socket
     Socket();
     int Create_socket(int version, int type, int protocol);
 
+    private:
+    
+
 };
 
 #endif

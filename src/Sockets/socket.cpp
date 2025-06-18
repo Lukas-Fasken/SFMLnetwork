@@ -24,3 +24,10 @@ int Socket::Create_socket(int version, int type, int protocol)
     }
     return sockfd;
 }
+void bind_socket()
+{
+    struct sockaddr_in serverAddr;
+    serverAddr.sin_family;
+    
+}
+
