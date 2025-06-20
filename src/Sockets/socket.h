@@ -5,9 +5,10 @@
 #include <stdio.h>
 #include <iostream>
 
-// Call this function at the start of your program to initialize Winsock
+
 inline int InitializeWinsock()
 {
+    // Call this function at the start of your program to initialize Winsock
     WSADATA wsadata;
     if (WSAStartup(MAKEWORD(2,2), &wsadata) != 0)
     {
@@ -20,12 +21,17 @@ inline int InitializeWinsock()
 class Socket
 {
     public:
+    Socket(int version);
     Socket();
-    int Create_socket(int version, int type, int protocol);
+    void Create_socket(int type, int protocol);
+    void connect_socket(char* Address);
+    void send_msg(char* msg);
+    void close_socket();
 
+
+    int sockfd;
     private:
-    
-
+    const int version {AF_INET};
 };
 
 #endif
