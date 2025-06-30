@@ -1,7 +1,11 @@
 add_executable(main main.cpp)
 
 add_subdirectory(Sockets)
+add_subdirectory(Utils)
 
 target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics ws2_32)
-target_link_libraries(main PRIVATE Sockets)
+target_link_libraries(main PRIVATE 
+            SFML::Graphics 
+            ws2_32
+            Sockets
+            Utils)
