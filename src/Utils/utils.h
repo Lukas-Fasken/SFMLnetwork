@@ -10,11 +10,11 @@ class menu_template
     public:
     menu_template();
     menu_template(sf::Font font);
-    void add_elements(std::vector<std::string> element_text);
-    void add_elements(std::vector<std::string> element_text, int index);
+    void add_elements(std::string element_text[], int curr_elements_length);
+    void add_elements(std::string element_text[], int curr_elements_length, int index);
     void remove_element(int index);
-    void generate_drawables(unsigned int window_size[2], unsigned int offset, unsigned int char_size, sf::Vector2f mouse_pos);
-    std::tuple<std::vector<sf::RectangleShape>, std::vector<std::string>> get_drawables();
+    void generate_drawables(unsigned int window_size[2], unsigned int offset[2], unsigned int char_size, sf::Vector2f mouse_pos);
+    std::tuple<std::vector<sf::RectangleShape>, std::vector<sf::Text>> get_drawables();
     private:
     const sf::Font font {"C:/Windows/Fonts/arial.ttf"};
     // unsigned int char_size;
