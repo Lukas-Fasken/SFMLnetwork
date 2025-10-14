@@ -35,4 +35,4 @@ target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/includes)
 target_compile_features(main PRIVATE cxx_std_20)
 
 # Link SFML
-target_link_libraries(main PRIVATE SFML::Graphics nlohmann_json::nlohmann_json)
+target_link_libraries(main PRIVATE SFML::Network SFML::Graphics nlohmann_json::nlohmann_json)
