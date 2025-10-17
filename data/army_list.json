@@ -1,0 +1,61 @@
+{
+    "faction": "Space Marine",
+    "points": 90112,
+    "units": [
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Heavy Intercessor Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Terminator Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Terminator Squad"
+        },
+        {
+            "character": "",
+            "models": 1,
+            "name": "Terminator Squad"
+        }
+    ]
+}
