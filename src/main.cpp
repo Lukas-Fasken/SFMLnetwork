@@ -11,6 +11,9 @@
 #include <string>
 #include <chrono>
 #include <filesystem>
+#include <fstream>
+#include <iterator>
+#include <sstream>
 using json = nlohmann::json;
 
 // Global running flag
@@ -37,11 +40,83 @@ void input_thread_func()
             g_running.store(false);
             break;
         } else {
-            {
-                std::lock_guard<std::mutex> lock(outMutex);
-                outQueue.push_back(line);
+            // Accept two styles:
+            // 1) /json <type> <filepath>  -> read file and send JSON {type: <type>, data: <parsed JSON or raw string>}
+            // 2) /json <type> <string>    -> send JSON {type: <type>, data: <string>}
+            // 3) <type> <string>          -> shorthand without /json prefix
+
+            // tokenize: first token may be "/json"
+            std::istringstream iss(line);
+            std::string first;
+            if (!(iss >> first)) continue;
+
+            std::string type;
+            std::string rest;
+
+            if (first == "/json") {
+                if (!(iss >> type)) {
+                    std::cerr << "Usage: /json <type> <filepath|string>\n";
+                    continue;
+                }
+                std::getline(iss, rest);
+                if (!rest.empty() && rest.front() == ' ') rest.erase(0,1);
+            } else {
+                // treat first token as type and the rest as string
+                type = first;
+                std::getline(iss, rest);
+                if (!rest.empty() && rest.front() == ' ') rest.erase(0,1);
             }
-            outCv.notify_one();
+
+            if (type.empty()) {
+                std::cerr << "Message type is required.\n";
+                continue;
+            }
+
+            json outj;
+            outj["type"] = type;
+
+            if (rest.empty()) {
+                // empty data
+                outj["data"] = nullptr;
+            } else {
+                // if rest looks like an existing file path, read it
+                try {
+                    if (std::filesystem::exists(rest)) {
+                        std::ifstream ifs(rest);
+                        if (!ifs) {
+                            std::cerr << "Failed to open file: " << rest << "\n";
+                            continue;
+                        }
+                        std::string contents((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+                        try {
+                            // If file contains valid JSON, use parsed value as data
+                            json parsed = json::parse(contents);
+                            outj["data"] = parsed;
+                        } catch (...) {
+                            // otherwise send raw contents as string
+                            outj["data"] = contents;
+                        }
+                    } else {
+                        // not a file, treat rest as a raw string
+                        outj["data"] = rest;
+                    }
+                } catch (const std::exception &e) {
+                    std::cerr << "Error processing data or file: " << e.what() << "\n";
+                    continue;
+                }
+            }
+
+            // queue serialized JSON
+            try {
+                std::string serialized = outj.dump();
+                {
+                    std::lock_guard<std::mutex> lock(outMutex);
+                    outQueue.push_back(serialized);
+                }
+                outCv.notify_one();
+            } catch (const std::exception &e) {
+                std::cerr << "Failed to serialize JSON message: " << e.what() << "\n";
+            }
         }
     }
 }
